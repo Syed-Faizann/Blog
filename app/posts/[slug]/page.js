@@ -10,8 +10,7 @@ import me from "@/public/me2.jpg";
 import Link from "next/link";
 
 export default async function PostPage({ params: rawParams }) {
-  // Unwrap params if it's a Promise
-  const params = await rawParams; 
+  const params = await rawParams;
   const slug = params.slug;
 
   if (!slug) {
@@ -34,26 +33,32 @@ export default async function PostPage({ params: rawParams }) {
       </div>
     );
   }
-    const session = await getServerSession(authOptions);
+
+  const session = await getServerSession(authOptions);
   const currentUser = session?.user || null;
 
   return (
     <>
       <Navbar />
-      <main className="px-14 mt-24">
-        <div className="max-w-4xl mx-auto">
-          {/* Post Header */}
-          <div className="text-center">
-            <h1 className="text-5xl font-semibold mb-6">{post.title}</h1>
-            <div className="flex justify-center items-center gap-3 text-gray-600 text-sm">
+
+      <main className="mt-20 w-full">
+        <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+          
+          {/* HEADER */}
+          <header className="text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-5">
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap justify-center items-center gap-3 text-gray-600 text-sm">
               <Image
                 src={me}
                 alt="Author"
-                width={35}
-                height={35}
+                width={36}
+                height={36}
                 className="rounded-full"
               />
-              <span>
+              <span className="break-words text-center">
                 {post.author?.name || "Unknown Author"} ·{" "}
                 {new Date(post.createdAt).toLocaleDateString("en-US", {
                   day: "2-digit",
@@ -62,46 +67,66 @@ export default async function PostPage({ params: rawParams }) {
                 })}
               </span>
             </div>
-          </div>
+          </header>
 
-          {/* Post Image */}
+          {/* IMAGE */}
           {post.image && (
-            <div className="mt-10 w-full h-[450px] relative rounded-2xl overflow-hidden shadow-md">
+            <div className="mt-8 sm:mt-10 relative w-full h-[220px] sm:h-[300px] md:h-[400px] lg:h-[450px] rounded-2xl overflow-hidden shadow-md">
               <Image
                 src={post.image}
                 alt={post.title}
                 fill
                 className="object-cover"
+                priority
               />
             </div>
           )}
 
-          {/* Post Content */}
-          <div
-            className="prose prose-lg max-w-none mt-10 text-gray-800 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+          {/* POST CONTENT — FIXED */}
+          <article
+            className="
+               prose prose-base sm:prose-lg
+    max-w-none
+    mt-8 sm:mt-10
+    text-gray-800 leading-relaxed
+    border-2 border-gray-300 rounded-lg
+    p-4 sm:p-6
 
-             <CommentSection postId={post.id} currentUser={currentUser} />
-          {/* Back link / last updated */}
-          <div className="mt-16 flex justify-between items-center border-t pt-6">
+    break-words
+    whitespace-normal
+    overflow-x-auto
+            "
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+
+          {/* COMMENTS */}
+          <section className="mt-12">
+            <CommentSection postId={post.id} currentUser={currentUser} />
+          </section>
+
+          {/* FOOTER */}
+          <footer className="mt-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t pt-6">
             <Link
               href="/"
               className="text-blue-600 font-medium hover:underline"
             >
               ← Back to Home
             </Link>
-            <p className="text-sm text-gray-500">
-              {post.updatedAt
-                ? `Last updated on ${new Date(post.updatedAt).toLocaleDateString(
-                    "en-US",
-                    { day: "2-digit", month: "short", year: "numeric" }
-                  )}`
-                : ""}
-            </p>
-          </div>
+
+            {post.updatedAt && (
+              <p className="text-sm text-gray-500">
+                Last updated on{" "}
+                {new Date(post.updatedAt).toLocaleDateString("en-US", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
+            )}
+          </footer>
         </div>
       </main>
+
       <Footer />
     </>
   );

@@ -10,10 +10,11 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="flex justify-between py-6 items-center px-14">
+  <div className="p-4 md:p-0">
+    <nav className="border-1 border-[#ccc] shadow-[0_4px_10px_rgba(0,0,0,0.05)] md:s bg-white rounded-full md:rounded-none md:border-0 flex justify-between py-6 items-center px-10 md:px-14">
       {/* Logo */}
       <Link href='/'>
-      <div className="title flex items-center gap-2">
+      <div className="hidden md:block title flex items-center gap-2">
         <Image
           src={logo}
           alt="Logo"
@@ -36,9 +37,6 @@ export default function Navbar() {
           <li className="cursor-pointer font-medium text-center hover:font-bold transition-all duration-150">
             Blog
           </li>
-          <li className="cursor-pointer font-medium text-center hover:font-bold transition-all duration-150">
-            About
-          </li>
 
           {/* ✅ Corrected: "Post" link to /posts/create */}
           {session && (
@@ -54,8 +52,8 @@ export default function Navbar() {
         <div className="start-btn ml-6">
           {session ? (
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="text-red-400 bg-red-50 px-3 py-1 rounded-2xl hover:text-red-500 cursor-pointer hover:font-bold"
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="text-red-400 bg-red-50 px-3 py-1 rounded-2xl hover:text-red-500 cursor-pointer hover:font-bold"
             >
               Logout
             </button>
@@ -69,5 +67,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+          </div>
   );
 }
